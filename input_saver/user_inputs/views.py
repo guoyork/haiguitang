@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import InputForm
-from .models import UserInput
+from .models import UserInput, QA
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 import json
@@ -43,3 +43,27 @@ def puzzles(request):
         data = f.read()
     print(1111)
     return HttpResponse(data, content_type='text/plain')
+
+
+def save(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            save_data = QA(name=data.get('name'), question=data.get('question'), answer=data.get('answer'))
+            save_data.save()
+            # print(QA.objects.all())
+            return JsonResponse({
+                'status': 'success',
+                'message': 'JSON saved successfully',
+                'id': save_data.id
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=400)
+
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Invalid request method'
+    }, status=405)

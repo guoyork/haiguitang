@@ -270,6 +270,19 @@
                     const answer = answerMatch ? answerMatch[1] : response;
                     
                     cluesGiven.push({question, answer});
+                    
+                    const csrftoken = "{{ csrf_token }}";
+
+                    fetch('/save/', {
+                        method: 'POST',
+                        headers: {
+                            'X-Title': encodeURIComponent('海龟汤AI助手'),
+                            'X-CSRFToken': csrftoken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({'name': puzzleFile, 'question': question, 'answer': answer})
+                    });
+
                     return answer;
                 } catch (error) {
                     throw new Error(`回答问题时出错: ${error.message}`);
@@ -411,7 +424,7 @@
         });
     </script>
     <script>
-        const OPENROUTER_API_KEY = "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";
+        const OPENROUTER_API_KEY = ;
         const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
         const DEFAULT_MODEL = "deepseek/deepseek-chat-v3-0324";
     </script>
