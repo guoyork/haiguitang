@@ -30,7 +30,6 @@
         </div>
     </div>
     <div style="
-        position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
@@ -42,8 +41,7 @@
     ">
         <div class="rating-section" style="max-width: 600px; margin: 0 auto;">
             <h3 style="margin-bottom: 15px;">为本问题评分</h3>
-    
-            <form id="ratingForm" method="post" action="/rate_item/">
+            <form id="ratingForm" method="post" action="/rate_item/?name={{request.GET.puzzle}}">
                 {% csrf_token %}
                 <div class="rating-control" style="margin-bottom: 10px;">
                     <div class="stars" style="display: inline-block;">
@@ -70,19 +68,9 @@
                 ">提交评分</button>
             </form>
     
-            <div class="rating-summary" style="margin-top: 15px;">
-                <div style="display: inline-block; margin: 0 15px;">
-                    <span style="font-weight: bold;">平均:</span>
-                    <span id="averageRating">{{ average_rating|default:"-" }}</span>/5
-                </div>
-                <div style="display: inline-block; margin: 0 15px;">
-                    <span style="font-weight: bold;">人数:</span>
-                    <span id="totalRatings">{{ total_ratings }}</span>
-                </div>
-            </div>
         </div>
     </div>
-    <script src="{% static 'script/app.js' %}"></script>
     <script src="{% static 'script/config.js' %}"></script>
+    <script src="{% static 'script/app.js' %}"></script>
 </body>
 </html>

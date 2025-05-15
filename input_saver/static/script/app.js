@@ -408,9 +408,6 @@
             .then(response => response.json())
                 .then(data => {
                 if (data.status === 'success') {
-                    document.getElementById('averageRating').textContent = 
-                        data.average_rating ? data.average_rating.toFixed(1) : '-';
-                    document.getElementById('totalRatings').textContent = data.total_ratings;
                     // 创建浮动提示
                     const notification = document.createElement('div');
                     notification.textContent = '评分成功！';

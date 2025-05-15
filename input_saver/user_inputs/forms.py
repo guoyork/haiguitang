@@ -1,14 +1,6 @@
 from django import forms
-from .models import UserInput, Rating
+from .models import Rating
 
-
-class InputForm(forms.ModelForm):
-    class Meta:
-        model = UserInput
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
-        }
 
 class RatingForm(forms.ModelForm):
     class Meta:

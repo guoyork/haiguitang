@@ -1,25 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import InputForm, RatingForm
-from .models import UserInput, QA, Rating
+from .forms import RatingForm
+from .models import QA, Rating, Questions
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 import json
 import os
 
-
-def index(request):
-    print(111)
-    if request.method == 'POST':
-        form = InputForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('index')
-    else:
-        form = InputForm()
-
-    inputs = UserInput.objects.all().order_by('-created_at')
-    return render(request, 'user_inputs/index2.html', {'form': form, 'inputs': inputs})
 
 
 def home(request):
@@ -49,9 +36,9 @@ def save(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            save_data = QA(name=data.get('name'), question=data.get('question'), answer=data.get('answer'))
+            title=data.get('name')[:-3]
+            save_data = QA(question=Questions.objects.get(title=title), query=data.get('question'), answer=data.get('answer'))
             save_data.save()
-            print(QA.objects.all())
             return JsonResponse({
                 'status': 'success',
                 'message': 'JSON saved successfully',
@@ -69,14 +56,18 @@ def save(request):
     }, status=405)
 
 def rate_item(request):
+    title=request.GET.get('name', '')[:-3]
+    print(request.GET.get('name', ''))
     if request.method == 'POST':
         form = RatingForm(request.POST)
         if form.is_valid():
             # 创建新评分记录（无需用户）
             rating = Rating.objects.create(
+                question=Questions.objects.get(title=title),
                 score=form.cleaned_data['score']
             )
             # 计算新的平均评分
+            print(11111)
             return JsonResponse({
                 'status': 'success',
             })
