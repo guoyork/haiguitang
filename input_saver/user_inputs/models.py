@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 import json
 
 
@@ -18,3 +21,17 @@ class QA(models.Model):
 
     def __str__(self):
         return self.name
+
+class Rating(models.Model):
+    
+    score = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+        help_text="Rating value from 1 to 5"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.item.name} rated {self.score}/5"

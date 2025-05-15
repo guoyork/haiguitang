@@ -185,3 +185,36 @@ button:hover {
         flex-direction: column;
     }
 }
+
+.rating-control .stars {
+    display: inline-block;
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    font-size: 2em;
+}
+
+.rating-control .stars input {
+    display: none;
+}
+
+.rating-control .stars label {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.rating-control .stars label:hover,
+.rating-control .stars label:hover~label,
+.rating-control .stars input:checked~label {
+    color: gold;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+}

@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
-from .forms import InputForm
-from .models import UserInput, QA
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import InputForm, RatingForm
+from .models import UserInput, QA, Rating
+from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 import json
@@ -41,7 +42,6 @@ def puzzles(request):
     json_path = os.path.join(settings.BASE_DIR, 'puzzles', file_name)
     with open(json_path, 'r', encoding='utf-8') as f:
         data = f.read()
-    print(1111)
     return HttpResponse(data, content_type='text/plain')
 
 
@@ -51,7 +51,7 @@ def save(request):
             data = json.loads(request.body)
             save_data = QA(name=data.get('name'), question=data.get('question'), answer=data.get('answer'))
             save_data.save()
-            # print(QA.objects.all())
+            print(QA.objects.all())
             return JsonResponse({
                 'status': 'success',
                 'message': 'JSON saved successfully',
@@ -67,3 +67,17 @@ def save(request):
         'status': 'error',
         'message': 'Invalid request method'
     }, status=405)
+
+def rate_item(request):
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            # 创建新评分记录（无需用户）
+            rating = Rating.objects.create(
+                score=form.cleaned_data['score']
+            )
+            # 计算新的平均评分
+            return JsonResponse({
+                'status': 'success',
+            })
+        return JsonResponse({'status': 'error', 'errors': form.errors})
