@@ -67,11 +67,34 @@
     </header>
     <div class="container">
         <h1>选择海龟汤谜题</h1>
+        <div style="text-align: center;">
+            <button id="random-puzzle">
+                随便来个
+            </button>
+        </div>
         <div id="game-list" class="game-list">
             <!-- 游戏列表将通过JS动态加载 -->
         </div>
     </div>
     <script>
+        var button= document.getElementById("random-puzzle");
+
+        button.addEventListener("click", async function () {
+            const listResponse = await fetch('./puzzle_index');
+            if (!listResponse.ok) {
+                throw new Error('无法加载谜题列表');
+            }
+            const puzzleFiles = await listResponse.json();
+
+            if (puzzleFiles.length === 0) {
+                throw new Error('没有找到任何谜题文件');
+            }
+
+            const ran=Math.floor(Math.random()* puzzleFiles.length);
+            const puzzle_name= puzzleFiles[ran];
+            window.location.href = `./game/?puzzle=${puzzle_name}`;
+        });
+
         document.addEventListener('DOMContentLoaded', async function() {
             const gameList = document.getElementById('game-list');
             
