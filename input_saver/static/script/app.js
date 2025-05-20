@@ -398,6 +398,13 @@
             
             const form = e.target;
             const formData = new FormData(form);
+            const puzzle_name=urlParams.get('puzzle');
+            
+            if (localStorage.getItem(`rated_${puzzle_name}`)) {
+                alert('您已经评过分了！');
+                return;
+            }
+
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -407,22 +414,25 @@
             })
             .then(response => response.json())
                 .then(data => {
-                if (data.status === 'success') {
-                    // 创建浮动提示
-                    const notification = document.createElement('div');
-                    notification.textContent = '评分成功！';
-                    notification.style.position = 'fixed';
-                    notification.style.bottom = '80px';
-                    notification.style.left = '50%';
-                    notification.style.transform = 'translateX(-50%)';
-                    notification.style.background = '#4CAF50';
-                    notification.style.color = 'white';
-                    notification.style.padding = '10px 20px';
-                    notification.style.borderRadius = '4px';
-                    notification.style.zIndex = '1001';
-                    document.body.appendChild(notification);
-                    
-                    setTimeout(() => notification.remove(), 2000);
+                    if (data.status === 'success') {
+                        localStorage.setItem(`rated_${puzzle_name}`, 'true');
+                        form.getElementById('ratingForm').disabled = true;
+                        form.getElementById('ratingForm').textContent = '已评分';
+                        // 创建浮动提示
+                        const notification = document.createElement('div');
+                        notification.textContent = '评分成功！';
+                        notification.style.position = 'fixed';
+                        notification.style.bottom = '80px';
+                        notification.style.left = '50%';
+                        notification.style.transform = 'translateX(-50%)';
+                        notification.style.background = '#4CAF50';
+                        notification.style.color = 'white';
+                        notification.style.padding = '10px 20px';
+                        notification.style.borderRadius = '4px';
+                        notification.style.zIndex = '1001';
+                        document.body.appendChild(notification);
+                        
+                        setTimeout(() => notification.remove(), 2000);
                 } else {
                     alert('评分失败: ' + (data.errors?.score?.[0] || '未知错误'));
                 }
