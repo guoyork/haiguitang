@@ -398,6 +398,7 @@
             
             const form = e.target;
             const formData = new FormData(form);
+            const urlParams = new URLSearchParams(window.location.search);
             const puzzle_name=urlParams.get('puzzle');
             
             if (localStorage.getItem(`rated_${puzzle_name}`)) {
@@ -416,8 +417,8 @@
                 .then(data => {
                     if (data.status === 'success') {
                         localStorage.setItem(`rated_${puzzle_name}`, 'true');
-                        form.getElementById('ratingForm').disabled = true;
-                        form.getElementById('ratingForm').textContent = '已评分';
+                        document.getElementById('ratingForm').disabled = true;
+                        document.getElementById('ratingForm').textContent = '已评分';
                         // 创建浮动提示
                         const notification = document.createElement('div');
                         notification.textContent = '评分成功！';
